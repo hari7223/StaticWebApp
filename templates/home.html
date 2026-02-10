@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Webpage</title>
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=Source+Sans+3:wght@400;500;600&display=swap");
+
+        :root {
+            --bg: #f7f6fb;
+            --panel: #ffffff;
+            --ink: #1b1b1f;
+            --muted: #6b6b7a;
+            --border: #e2e2ea;
+            --brand: #3523c8;
+            --brand-dark: #2a1aa3;
+            --glow: rgba(53, 35, 200, 0.18);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Source Sans 3", "Helvetica Neue", Arial, sans-serif;
+            color: var(--ink);
+            background:
+                radial-gradient(1200px 400px at 50% -200px, #ece9ff 0%, transparent 60%),
+                linear-gradient(180deg, #ffffff 0%, var(--bg) 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 48px 24px;
+        }
+
+        .page {
+            width: min(560px, 100%);
+            background: var(--panel);
+            border-radius: 20px;
+            box-shadow: 0 30px 60px rgba(20, 20, 30, 0.12);
+            padding: 36px 32px 32px;
+        }
+
+        .page-title {
+            font-family: "Playfair Display", Georgia, serif;
+            font-size: 30px;
+            font-weight: 600;
+            text-align: center;
+            margin: 0 0 6px;
+        }
+
+        .page-subtitle {
+            text-align: center;
+            color: var(--muted);
+            margin: 0 0 24px;
+        }
+
+        form {
+            display: grid;
+            gap: 16px;
+        }
+
+        .form-field {
+            display: grid;
+            gap: 6px;
+        }
+
+        label {
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--muted);
+        }
+
+        input[type="text"],
+        input[type="password"],
+        input[type="file"] {
+            width: 100%;
+            padding: 12px 14px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            font-size: 15px;
+            background: #fff;
+            transition: border 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--brand);
+            box-shadow: 0 0 0 4px var(--glow);
+        }
+
+        .btn {
+            width: 100%;
+            border: none;
+            padding: 12px 18px;
+            border-radius: 999px;
+            background: var(--brand);
+            color: #ffffff;
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            box-shadow: 0 12px 24px rgba(53, 35, 200, 0.2);
+            transition: transform 0.2s ease, background 0.2s ease;
+        }
+
+        .btn:hover {
+            background: var(--brand-dark);
+            transform: translateY(-1px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--brand);
+            border: 1px solid var(--brand);
+            box-shadow: none;
+        }
+
+        .btn-outline:hover {
+            background: rgba(53, 35, 200, 0.08);
+        }
+
+        .upload-row {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .upload-actions {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 12px;
+        }
+
+        .upload-actions .btn {
+            width: 100%;
+        }
+
+        .upload-actions .btn.small {
+            padding: 10px 16px;
+            font-size: 14px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @media (max-width: 520px) {
+            .page {
+                padding: 28px 22px;
+            }
+
+            .upload-actions {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="page">
+        <h1 class="page-title" id="pageTitle">Interactive Webpage</h1>
+        <p class="page-subtitle">Sign in to continue and manage your uploads.</p>
+
+        <form action="/signin" method="POST" enctype="multipart/form-data">
+            <div class="form-field">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+
+            <div class="form-field">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+
+            <button class="btn" type="submit">Sign In</button>
+
+            <a class="btn btn-outline" href="/register">New User? Please register here</a>
+
+            <div class="upload-row">
+                <div class="form-field">
+                    <label for="upload">Upload File for wordcount</label>
+                    <input type="file" id="upload" name="upload">
+                </div>
+
+                <div class="upload-actions">
+                    <button class="btn" type="button" id="uploadBtn">Upload File for wordcount</button>
+                    <button class="btn btn-outline small hidden" type="button" id="uploadNewBtn">Upload New</button>
+                </div>
+            </div>
+        </form>
+    </main>
+
+    <script>
+        const uploadInput = document.getElementById("upload");
+        const pageTitle = document.getElementById("pageTitle");
+        const uploadNewBtn = document.getElementById("uploadNewBtn");
+        const uploadBtn = document.getElementById("uploadBtn");
+        const defaultTitle = pageTitle.textContent;
+
+        uploadInput.addEventListener("change", () => {
+            const fileName = uploadInput.files.length > 0 ? uploadInput.files[0].name : "";
+            pageTitle.textContent = fileName || defaultTitle;
+            if (fileName) {
+                uploadNewBtn.classList.remove("hidden");
+            }
+        });
+
+        uploadNewBtn.addEventListener("click", () => {
+            uploadInput.value = "";
+            pageTitle.textContent = defaultTitle;
+            uploadNewBtn.classList.add("hidden");
+        });
+
+        uploadBtn.addEventListener("click", () => {
+            uploadInput.click();
+        });
+    </script>
+</body>
+</html>

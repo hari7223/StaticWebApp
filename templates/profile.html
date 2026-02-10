@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=Source+Sans+3:wght@400;500;600&display=swap");
+
+        :root {
+            --bg: #f7f6fb;
+            --panel: #ffffff;
+            --ink: #1b1b1f;
+            --muted: #6b6b7a;
+            --border: #e2e2ea;
+            --brand: #3523c8;
+            --brand-dark: #2a1aa3;
+            --glow: rgba(53, 35, 200, 0.18);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Source Sans 3", "Helvetica Neue", Arial, sans-serif;
+            color: var(--ink);
+            background:
+                radial-gradient(1200px 400px at 50% -200px, #ece9ff 0%, transparent 60%),
+                linear-gradient(180deg, #ffffff 0%, var(--bg) 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 48px 24px;
+        }
+
+        .page {
+            width: min(620px, 100%);
+            background: var(--panel);
+            border-radius: 20px;
+            box-shadow: 0 30px 60px rgba(20, 20, 30, 0.12);
+            padding: 36px 32px 32px;
+            position: relative;
+        }
+
+        .signout-btn {
+            position: absolute;
+            top: 24px;
+            right: 24px;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 999px;
+            background: var(--brand);
+            color: #ffffff;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .page-title {
+            font-family: "Playfair Display", Georgia, serif;
+            font-size: 28px;
+            font-weight: 600;
+            margin: 0 0 6px;
+        }
+
+        .page-subtitle {
+            color: var(--muted);
+            margin: 0 0 24px;
+        }
+
+        .profile-grid {
+            display: grid;
+            gap: 14px;
+        }
+
+        .profile-item {
+            display: grid;
+            grid-template-columns: 160px 1fr;
+            gap: 12px;
+            align-items: center;
+            padding: 12px 14px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            background: #fff;
+        }
+
+        .profile-label {
+            font-weight: 600;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .profile-value {
+            font-weight: 600;
+        }
+
+        .wordcount-row {
+            display: grid;
+            grid-template-columns: 160px 1fr auto;
+            gap: 12px;
+            align-items: center;
+            padding: 12px 14px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            background: #fff;
+        }
+
+        .download-btn {
+            border: none;
+            padding: 8px 12px;
+            border-radius: 999px;
+            background: var(--brand);
+            color: #ffffff;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        @media (max-width: 560px) {
+            .profile-item,
+            .wordcount-row {
+                grid-template-columns: 1fr;
+                gap: 6px;
+                align-items: start;
+            }
+
+            .signout-btn {
+                position: static;
+                margin-bottom: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="page">
+        <button class="signout-btn" type="button">Signout</button>
+
+        <h1 class="page-title">Profile</h1>
+        <p class="page-subtitle">Your account details and file summary.</p>
+
+        <section class="profile-grid">
+            <div class="profile-item">
+                <span class="profile-label">Username</span>
+                <span class="profile-value">jane_doe</span>
+            </div>
+            <div class="profile-item">
+                <span class="profile-label">First Name</span>
+                <span class="profile-value">Jane</span>
+            </div>
+            <div class="profile-item">
+                <span class="profile-label">Last Name</span>
+                <span class="profile-value">Doe</span>
+            </div>
+            <div class="profile-item">
+                <span class="profile-label">Email</span>
+                <span class="profile-value">jane.doe@email.com</span>
+            </div>
+            <div class="profile-item">
+                <span class="profile-label">Member Since</span>
+                <span class="profile-value">Jan 1, 2026</span>
+            </div>
+
+            <div class="wordcount-row">
+                <span class="profile-label">Wordcount</span>
+                <span class="profile-value">1,245 words</span>
+                <button class="download-btn" type="button">Download file</button>
+            </div>
+        </section>
+    </main>
+</body>
+</html>
