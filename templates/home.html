@@ -58,6 +58,13 @@
             margin: 0 0 24px;
         }
 
+        .error {
+            text-align: center;
+            color: #b42318;
+            font-weight: 600;
+            margin: -8px 0 20px;
+        }
+
         form {
             display: grid;
             gap: 16px;
@@ -122,27 +129,6 @@
             background: rgba(53, 35, 200, 0.08);
         }
 
-        .upload-row {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 12px;
-            align-items: center;
-        }
-
-        .upload-actions {
-            display: grid;
-            grid-template-columns: 1fr auto;
-            gap: 12px;
-        }
-
-        .upload-actions .btn {
-            width: 100%;
-        }
-
-        .upload-actions .btn.small {
-            padding: 10px 16px;
-            font-size: 14px;
-        }
 
         .hidden {
             display: none;
@@ -152,19 +138,15 @@
             .page {
                 padding: 28px 22px;
             }
-
-            .upload-actions {
-                grid-template-columns: 1fr;
-            }
         }
     </style>
 </head>
 <body>
     <main class="page">
         <h1 class="page-title" id="pageTitle">Interactive Webpage</h1>
-        <p class="page-subtitle">Sign in to continue and manage your uploads.</p>
+        <p class="page-subtitle">Sign in to check details and wordcount</p>
 
-        <form action="/signin" method="POST" enctype="multipart/form-data">
+        <form action="/signin" method="POST">
             <div class="form-field">
                 <label for="username">Username</label>
                 <input type="text" id="username" name="username" required>
@@ -178,45 +160,7 @@
             <button class="btn" type="submit">Sign In</button>
 
             <a class="btn btn-outline" href="/register">New User? Please register here</a>
-
-            <div class="upload-row">
-                <div class="form-field">
-                    <label for="upload">Upload File for wordcount</label>
-                    <input type="file" id="upload" name="upload">
-                </div>
-
-                <div class="upload-actions">
-                    <button class="btn" type="button" id="uploadBtn">Upload File for wordcount</button>
-                    <button class="btn btn-outline small hidden" type="button" id="uploadNewBtn">Upload New</button>
-                </div>
-            </div>
         </form>
     </main>
-
-    <script>
-        const uploadInput = document.getElementById("upload");
-        const pageTitle = document.getElementById("pageTitle");
-        const uploadNewBtn = document.getElementById("uploadNewBtn");
-        const uploadBtn = document.getElementById("uploadBtn");
-        const defaultTitle = pageTitle.textContent;
-
-        uploadInput.addEventListener("change", () => {
-            const fileName = uploadInput.files.length > 0 ? uploadInput.files[0].name : "";
-            pageTitle.textContent = fileName || defaultTitle;
-            if (fileName) {
-                uploadNewBtn.classList.remove("hidden");
-            }
-        });
-
-        uploadNewBtn.addEventListener("click", () => {
-            uploadInput.value = "";
-            pageTitle.textContent = defaultTitle;
-            uploadNewBtn.classList.add("hidden");
-        });
-
-        uploadBtn.addEventListener("click", () => {
-            uploadInput.click();
-        });
-    </script>
 </body>
 </html>

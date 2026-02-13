@@ -58,6 +58,20 @@
             margin: 0 0 24px;
         }
 
+        .error {
+            text-align: center;
+            color: #b42318;
+            font-weight: 600;
+            margin: -8px 0 20px;
+        }
+
+        .error {
+            text-align: center;
+            color: #b42318;
+            font-weight: 600;
+            margin: -8px 0 20px;
+        }
+
         form {
             display: grid;
             gap: 16px;
@@ -105,9 +119,51 @@
             transition: transform 0.2s ease, background 0.2s ease;
         }
 
+        .submit-btn:disabled {
+            background: #b8b8c8;
+            cursor: not-allowed;
+            box-shadow: none;
+            transform: none;
+        }
+
         .submit-btn:hover {
             background: var(--brand-dark);
             transform: translateY(-1px);
+        }
+
+        .submit-wrap {
+            position: relative;
+        }
+
+        .submit-wrap[data-tooltip]:not([data-tooltip=""]):hover::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            bottom: calc(100% + 10px);
+            background: #1f1f26;
+            color: #ffffff;
+            font-size: 12px;
+            padding: 6px 10px;
+            border-radius: 999px;
+            white-space: nowrap;
+            opacity: 0.95;
+        }
+
+        .match-status {
+            font-size: 13px;
+            margin: 0;
+            color: var(--muted);
+        }
+
+        .match-status.ok {
+            color: #1c7d3a;
+            font-weight: 600;
+        }
+
+        .match-status.bad {
+            color: #b42318;
+            font-weight: 600;
         }
 
         @media (max-width: 520px) {
@@ -120,9 +176,11 @@
 <body>
     <main class="page">
         <h1 class="form-title">Create an Account</h1>
-        <p class="form-subtitle">Join in a few seconds. It is quick and free.</p>
+        {% if error %}
+        <p class="error">{{ error }}</p>
+        {% endif %}
 
-        <form action="/register" method="POST">
+        <form action="/register" method="POST" enctype="multipart/form-data">
             <div class="form-field">
                 <label for="username">Username</label>
                 <input type="text" id="username" name="username" required>
@@ -136,6 +194,7 @@
             <div class="form-field">
                 <label for="confirm_password">Confirm Password</label>
                 <input type="password" id="confirm_password" name="confirm_password" required>
+                <p class="match-status" id="matchStatus" aria-live="polite"></p>
             </div>
 
             <div class="form-field">
@@ -151,10 +210,110 @@
             <div class="form-field">
                 <label for="email">Email</label>
                 <input type="email" id="email" name="email" required>
+                <p class="match-status" id="emailStatus" aria-live="polite"></p>
             </div>
 
-            <button class="submit-btn" type="submit">Register</button>
+            <div class="form-field">
+                    <label for="upload">Upload File for Wordcount</label>
+                    <input type="file" id="upload" name="upload">
+            </div>
+
+            <div class="submit-wrap" id="submitWrap" data-tooltip="">
+                <p class="match-status" id="formStatus" aria-live="polite"></p>
+                <button class="submit-btn" id="registerBtn" type="submit" disabled>Register</button>
+                
+            </div>
         </form>
     </main>
+
+    <script>
+      const passwordInput = document.getElementById("password");
+      const confirmInput = document.getElementById("confirm_password");
+      const matchStatus = document.getElementById("matchStatus");
+      const registerBtn = document.getElementById("registerBtn");
+      const submitWrap = document.getElementById("submitWrap");
+      const formStatus = document.getElementById("formStatus");
+      const emailInput = document.getElementById("email");
+      const emailStatus = document.getElementById("emailStatus");
+    
+      function updateValidation() {
+        const pw = passwordInput.value.trim();
+        const cf = confirmInput.value.trim();
+    
+        // Password-only message (under confirm password)
+        if (cf.length === 0) {
+          matchStatus.textContent = "";
+          matchStatus.className = "match-status";
+        } else if (pw === cf) {
+          matchStatus.textContent = "Passwords match.";
+          matchStatus.className = "match-status ok";
+        } else {
+          matchStatus.textContent = "Passwords do not match.";
+          matchStatus.className = "match-status bad";
+        }
+        
+        const emailValue = emailInput.value.trim();
+
+        
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        
+        let emailValid = true;
+        
+        if (emailValue.length === 0) {
+          emailStatus.textContent = "";
+          emailStatus.className = "match-status";
+          emailValid = false;
+        } else if (emailPattern.test(emailValue)) {
+          emailStatus.textContent = "Valid email address.";
+          emailStatus.className = "match-status ok";
+        } else {
+          emailStatus.textContent = "Invalid email format.";
+          emailStatus.className = "match-status bad";
+          emailValid = false;
+        }
+    
+        // Overall required fields 
+        const requiredFields = document.querySelectorAll("input[required]");
+        const allFieldsFilled = Array.from(requiredFields).every(f => f.value.trim() !== "");
+        const passwordsMatch = pw && cf && pw === cf;
+    
+        if (!allFieldsFilled) {
+          if (formStatus) {
+            formStatus.textContent = "Please fill all required fields.";
+            formStatus.className = "match-status bad";
+          }
+          registerBtn.disabled = true;
+          submitWrap.dataset.tooltip = "";
+          return;
+        }
+    
+        if (!passwordsMatch) {
+          if (formStatus) {
+            formStatus.textContent = "Fix password mismatch to register.";
+        formStatus.className = "match-status bad";
+      }
+      registerBtn.disabled = true;
+      submitWrap.dataset.tooltip = "Passwords not matching";
+      return;
+    }
+
+    if (formStatus) {
+      formStatus.textContent = "Ready to register.";
+      formStatus.className = "match-status ok";
+    }
+    registerBtn.disabled = false;
+    submitWrap.dataset.tooltip = "";
+  }
+
+  // Listen to changes (exclude file input)
+  document.querySelectorAll("input:not([type='file'])").forEach(inp => {
+    inp.addEventListener("input", updateValidation);
+  });
+
+  // Run once on load
+  updateValidation();
+
+
+    </script>
 </body>
 </html>

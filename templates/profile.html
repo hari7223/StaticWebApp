@@ -56,6 +56,8 @@
             color: #ffffff;
             font-weight: 600;
             cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
         }
 
         .page-title {
@@ -134,7 +136,7 @@
 </head>
 <body>
     <main class="page">
-        <button class="signout-btn" type="button">Signout</button>
+        <a class="signout-btn" href="/signout">Signout</a>
 
         <h1 class="page-title">Profile</h1>
         <p class="page-subtitle">Your account details and file summary.</p>
@@ -142,29 +144,29 @@
         <section class="profile-grid">
             <div class="profile-item">
                 <span class="profile-label">Username</span>
-                <span class="profile-value">jane_doe</span>
+                <span class="profile-value">{{ user.username }}</span>
             </div>
             <div class="profile-item">
                 <span class="profile-label">First Name</span>
-                <span class="profile-value">Jane</span>
+                <span class="profile-value">{{ user.first_name }}</span>
             </div>
             <div class="profile-item">
                 <span class="profile-label">Last Name</span>
-                <span class="profile-value">Doe</span>
+                <span class="profile-value">{{ user.last_name }}</span>
             </div>
             <div class="profile-item">
                 <span class="profile-label">Email</span>
-                <span class="profile-value">jane.doe@email.com</span>
-            </div>
-            <div class="profile-item">
-                <span class="profile-label">Member Since</span>
-                <span class="profile-value">Jan 1, 2026</span>
+                <span class="profile-value">{{ user.email }}</span>
             </div>
 
             <div class="wordcount-row">
                 <span class="profile-label">Wordcount</span>
-                <span class="profile-value">1,245 words</span>
-                <button class="download-btn" type="button">Download file</button>
+                <span class="profile-value">{{ wordcount }}</span>
+                {% if presigned_url %}
+                <a class="download-btn" href="{{ presigned_url }}">Download file</a>
+                {% else %}
+                <span></span>
+                {% endif %}
             </div>
         </section>
     </main>
