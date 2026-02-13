@@ -5,6 +5,7 @@ import os
 import sqlite3
 
 app = Flask(__name__)
+app.secret_key = os.environ.get("FLASK_SECRET_KEY", "dev-secret")
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 S3_BUCKET = os.environ.get("S3_BUCKET")
